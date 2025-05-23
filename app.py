@@ -17,10 +17,10 @@ with open("tfidf_vectorizer.pkl", "rb") as f:
 
 st.set_page_config(page_title="Sentiment Analysis", layout="centered")
 st.title("💬 Sentiment Analysis App")
-st.write("Enter a sentence to predict sentiment (positive or negative).")
+st.write("Enter a sentence to predict sentiment (Happy or Sad).")
 
 # User input
-user_input = st.text_area("Enter your text here", height=100)
+user_input = st.text_area("Enter your text here", height=300)
 
 if st.button("Analyze"):
     if user_input.strip() == "":
@@ -30,9 +30,8 @@ if st.button("Analyze"):
         prediction = model.predict(X_vec)[0]
         probability = model.predict_proba(X_vec)[0][1]
 
-        sentiment = "Positive 😊" if prediction == 1 else "Negative 😞"
+        sentiment = "HAPPY 😊" if prediction == 1 else "SAD 😞"
         st.subheader(f"Prediction: {sentiment}")
-        st.write(f"**Confidence:** {probability*100:.2f}%")
 
 # Optional: Display Evaluation Metrics from Test Set
 if st.checkbox("Show model evaluation on test set"):
@@ -63,13 +62,3 @@ if st.checkbox("Show model evaluation on test set"):
     ax.set_title("Confusion Matrix")
     st.pyplot(fig)
 
-    # ROC Curve
-    fpr, tpr, _ = roc_curve(y_true, y_proba)
-    fig2, ax2 = plt.subplots()
-    ax2.plot(fpr, tpr, label=f"ROC curve (AUC = {roc_auc:.4f})")
-    ax2.plot([0, 1], [0, 1], 'k--')
-    ax2.set_xlabel("False Positive Rate")
-    ax2.set_ylabel("True Positive Rate")
-    ax2.set_title("ROC Curve")
-    ax2.legend(loc="lower right")
-    st.pyplot(fig2)
